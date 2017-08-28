@@ -1,0 +1,335 @@
+<html>
+  <head>
+    <meta charset="utf8">
+    <title>Console Tests</title>
+    <link href="https://fonts.googleapis.com/css?family=Zilla+Slab:300,700" rel="stylesheet">
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        background-image: linear-gradient(120deg, #155799, #159957);
+        --accent-color-primary: #FEED00;
+        --accent-color-secondary: #FD4593;
+      }
+
+      [data-key]::after {
+        content: attr(data-key);
+        background-color: var(--accent-color-primary);
+        color: black;
+        font-family: "Zilla Slab";
+        font-weight: 300;
+        font-size: 0.4em;
+        padding: 0;
+        display: inline-block;
+        width: 1.25em;
+        margin-left: 0.5em;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      section {
+        height: 100vh;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+      }
+
+      button {
+        background-color: #000000;
+        color: var(--accent-color-primary);
+        font-family: "Zilla Slab";
+        font-weight: 700;
+        padding: 0.2em;
+        margin: 0.5em;
+        border: none;
+        box-shadow: 0.2em 0.2em 0 var(--accent-color-secondary);
+        font-size: 3em;
+        transition: transform 0.05s ease-in;
+      }
+
+      button:focus {
+        box-shadow: -0.2em -0.2em 0 var(--accent-color-secondary);
+        color: var(--accent-color-secondary);
+        transform: translate(0.05em, 0.05em);
+      }
+
+      button:active,
+      button.active,
+      button[aria-pressed="true"] {
+        color: var(--accent-color-secondary);
+        box-shadow: 0.2em 0.2em 0 var(--accent-color-primary);
+        transform: translate(0.05em, 0.05em);
+      }
+
+      button:active[data-key]::after,
+      button.active[data-key]::after,
+      button:focus[data-key]::after,
+      button[aria-pressed="true"][data-key]::after {
+        background-color: var(--accent-color-secondary);
+      }
+
+      canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <section class="buttons">
+      <button type="button" data-key="e">Exception</button>
+      <button type="button" data-key="E">console.error</button>
+      <button type="button" data-key="w">console.warn</button>
+      <button type="button" data-key="L">console.log</button>
+      <button type="button" data-key="i">console.info</button>
+      <button type="button" data-key="d">console.debug</button>
+      <button type="button" data-key="x">XHR</button>
+      <button type="button" data-key="s" aria-pressed="false">Stream logs</button>
+      <button type="button" data-key="l">Log repeatable message</button>
+      <button type="button" data-key="G">Add group</button>
+      <button type="button" data-key="C">Add collapsed group</button>
+      <button type="button" data-key="g">Close group</button>
+      <button type="button" data-key="T">Add Timer</button>
+      <button type="button" data-key="t">Close Timer</button>
+      <button type="button" data-key="r">Trace</button>
+      <button type="button" data-key="c">Count</button>
+      <button type="button" data-key="X">Log Error</button>
+    </section>
+
+    <!--<section class="test-cases">
+      <button type="button" data-testcase="concatenate">Concatenate</button>
+      <button type="button" data-testcase="shorthand">ES6 shorthand</button>
+      <button type="button" data-testcase="timing">Timing</button>
+      <button type="button" data-testcase="table">Tabular data</button>
+      <button type="button" data-testcase="collapsed">Collapsed</button>
+    </section>-->
+
+
+    <script>
+      const buttons = new Map();
+      [...document.querySelectorAll("[data-key]")]
+        .forEach(btn => buttons.set(btn.getAttribute("data-key"), btn));
+
+      document.addEventListener("click", e => {
+        if (e.target.tagName === "BUTTON") {
+          const button = e.target;
+          if (button.getAttribute("data-key")) {
+            handleLog(button.getAttribute("data-key"));
+          }
+          if (button.getAttribute("data-testcase")) {
+            handleTestCase(button.getAttribute("data-testcase"));
+          }
+
+          const isToggler = button.hasAttribute("aria-pressed");
+          if (isToggler) {
+            button.setAttribute("aria-pressed", button.getAttribute("aria-pressed") !== "true");
+            const activate = () => {
+              if (button.getAttribute("aria-pressed") === "true") {
+                onButtonActivate(button);
+                setTimeout(activate, 20);
+              }
+            }
+            activate();
+
+          } else {
+            onButtonActivate(button);
+            button.classList.add("active");
+            setTimeout(() => button.classList.remove("active"), 200);
+          }
+        }
+      });
+
+      document.addEventListener("keydown", e => {
+        if (buttons.has(e.key)) {
+          const button = buttons.get(e.key);
+          button.click();
+        }
+      });
+
+      const foo = "foo";
+      const bar = "bar";
+      let notCollapsed = true;
+      async function handleTestCase(testCase) {
+        switch (testCase) {
+          case "concatenate" : console.log("foo: ", foo, "bar: ", bar);break;
+          case "shorthand" : console.log({foo, bar});break;
+          case "timing" :
+            console.log("start recording");
+            console.time("foo");
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            console.timeEnd("foo");
+            break;
+          case "table" :
+            console.table(["🔥","🦊","💥"]);
+            console.table({foo, bar});
+            console.table((new WeakMap()).set({foo}, "my foo obj").set({bar}, "my bar obj"));
+            console.table((new Set()).add(foo).add(bar));
+            break;
+          case "collapsed" :
+            if (notCollapsed) {
+              console.log("Add 50 messages");
+              logMany(50)
+              notCollapsed = false;
+            } else {
+              console.log("create a collapsed group");
+              console.groupCollapsed("foo");
+              logMany(50)
+              console.groupEnd();
+              console.log("group is closed")
+            }
+
+            break;
+        }
+      }
+
+      function logMany(number) {
+        for (let i = 0; i < number; i++) {
+          console.log("message", i);
+        }
+      }
+
+      let currentGroup = 0;
+      let streamTimeoutId;
+      function handleLog(key) {
+        switch (key) {
+          case "L" : console.log({a : Math.ceil(Math.random()*100), b: "b", c: [1,2,3]});break;
+          case "E" : console.error("Console.error", Math.random()*100);break;
+          case "w" : console.warn("Console.warn", Math.random()*100);break;
+          case "i" : console.info("Console.info", Math.random()*100);break;
+          case "d" : console.debug("Console.debug", Math.random()*100);break;
+          case "l" : console.log("Repeat");break;
+          case "G" : console.group("Group", ++currentGroup);break;
+          case "C" : console.groupCollapsed("Group collapsed", ++currentGroup);break;
+          case "g" : console.groupEnd();break;
+          case "T" : console.time("Timer");break;
+          case "t" : console.timeEnd("Timer");break;
+          case "r" : function foo(){console.trace()};foo();break;
+          case "c" : console.count("My counter");break;
+          case "e" : throw new Error(Math.random()*100);break;
+          case "X" : console.log(Error("bar"));break;
+          case "x" : fetch("https://api.github.com");break;
+          case "s" :
+            if (!streamTimeoutId) {
+              streamLogs();
+            } else {
+              clearTimeout(streamTimeoutId);
+              streamTimeoutId = null;
+            }
+            break;
+        }
+      }
+
+      function streamLogs() {
+        console.log("Streaming logs", new Date());
+        streamTimeoutId = setTimeout(streamLogs, 0);
+      }
+
+      let canvas;
+      let ctx;
+      let particles = [];
+
+      function setupCanvas() {
+        canvas = document.querySelector("canvas");
+        ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        requestAnimationFrame(update);
+      }
+      setupCanvas()
+
+      function update() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        particles = particles.reduce((res, p, index) => {
+          const {
+          acceleration,
+            color,
+            locat,
+            size,
+            velocity,
+          } = p;
+          const {x, y} = locat;
+
+          const {h, s, l} = color;
+          ctx.fillStyle = `HSL(${h}, ${s}%, ${l}%)`;
+          ctx.fillRect(x, y, size, size);
+
+
+          if (y> 0 && y < window.innerHeight + size && x > 0 &&  x < window.innerWidth + size) {
+            res.push(updateParticle(p));
+          }
+
+          return res;
+        }, []);
+        requestAnimationFrame(update);
+      }
+
+      function updateParticle(particle) {
+        const {
+          acceleration,
+          color,
+          locat,
+          velocity,
+        } = particle;
+
+        return Object.assign({}, particle, {
+          color: Object.assign({}, color, {
+            h: color.h + velocity.y
+          }),
+          locat: addVectors(locat, velocity),
+          velocity: addVectors(velocity, acceleration),
+        });
+      }
+
+      function getNewParticle(x, y) {
+        return {
+          acceleration: {
+            x: getRandom(-1, 1),
+            y: getRandom(-1, 1),
+          },
+          color: Math.random() > 0.5
+            ? {h: 56 , s: 100, l: 49.8 }
+            : { h: 334.6, s: 97.9, l: 63.1 },
+          locat: {x,y},
+          size: getRandom(5, 10),
+          velocity: {
+            x: getRandom(-20, 20),
+            y: getRandom(-20, 20),
+          },
+        }
+      }
+
+      function addVectors(v1, v2) {
+        return {
+          x: v1.x + v2.x,
+          y: v1.y + v2.y,
+        };
+      }
+
+      function getRandom(min = 0, max = 1) {
+        return min + (Math.random() * (max - min));
+      }
+
+      function onButtonActivate(button) {
+        const {
+          left,
+          top,
+          right,
+          bottom,
+          x
+        } = button.getBoundingClientRect();
+
+        particles.push(...
+          Array
+            .from({length: Math.ceil(getRandom(10, 20))})
+            .map( _ => getNewParticle(getRandom(left, right), top))
+        );
+      }
+    </script>
+  </body>
+</html>
