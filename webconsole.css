@@ -725,24 +725,27 @@ a.learn-more-link.webconsole-learn-more-link {
   --object-inspector-hover-background: transparent;
   --attachment-margin-block-end: 3px;
 }
+
 /* Webconsole specific theme variables */
 .theme-light .webconsole-output-wrapper,
 .theme-firebug .webconsole-output-wrapper {
   --error-color: var(--red-70);
   --error-background-color: #FDF2F5;
-  --warning-color: var(--red-80);
+  --warning-color: var(--yellow-80);
   --warning-background-color: #FFFBD5;
   --console-output-color: var(--grey-90);
   --attachment-border-color: var(--theme-content-color1);
+  --repeat-bubble-background-color: var(--theme-highlight-blue);
 }
 
 .theme-dark .webconsole-output-wrapper {
-  --error-color: currentColor;
-  --error-background-color: #5A313A;
-  --warning-color: currentColor;
-  --warning-background-color: #524E25;
+  --error-color: #FF9494;
+  --error-background-color: #442923;
+  --warning-color: #FCE19F;
+  --warning-background-color: #44391F;
   --console-output-color: white;
   --attachment-border-color: var(--theme-body-color);
+  --repeat-bubble-background-color: var(--blue-60);
 }
 
 /*
@@ -847,15 +850,36 @@ a.learn-more-link.webconsole-learn-more-link {
 
 .webconsole-output-wrapper .message.warn.warn {
   background-color: var(--warning-background-color);
+  color: var(--warning-color);
 }
 
 /* Special casing error and warning String reps so they are legible */
+.webconsole-output-wrapper .message.error .message-body,
 .webconsole-output-wrapper .message.error .message-body > .objectBox-string {
   color: var(--error-color);
 }
-
 .webconsole-output-wrapper .message.warn .message-body > .objectBox-string {
   color: var(--warning-color);
+}
+
+/* Special casing dark-theme error and warning ObjectInspector colors */
+.theme-dark .webconsole-output-wrapper .message.error .tree.object-inspector .object-label,
+.theme-dark .webconsole-output-wrapper .message.error .tree.object-inspector .object-label *,
+.theme-dark .webconsole-output-wrapper .message.warn .tree.object-inspector .object-label,
+.theme-dark .webconsole-output-wrapper .message.warn .tree.object-inspector .object-label *,
+.theme-dark .webconsole-output-wrapper .message.error .objectLeftBrace,
+.theme-dark .webconsole-output-wrapper .message.error .objectRightBrace,
+.theme-dark .webconsole-output-wrapper .message.error .arrayLeftBracket,
+.theme-dark .webconsole-output-wrapper .message.error .arrayRightBracket,
+.theme-dark .webconsole-output-wrapper .message.warn .objectLeftBrace,
+.theme-dark .webconsole-output-wrapper .message.warn .objectRightBrace,
+.theme-dark .webconsole-output-wrapper .message.warn .arrayLeftBracket,
+.theme-dark .webconsole-output-wrapper .message.warn .arrayRightBracket {
+  color: var(--theme-body-color);
+}
+.theme-dark .webconsole-output-wrapper .message.error .tree.object-inspector,
+.theme-dark .webconsole-output-wrapper .message.warn .tree.object-inspector {
+  --tree-indent-border-color: var(--theme-body-color);
 }
 
 .webconsole-output-wrapper .message-flex-body > .message-body {
@@ -907,7 +931,7 @@ a.learn-more-link.webconsole-learn-more-link {
 
 /* The bubble that shows the number of times a message is repeated */
 .webconsole-output-wrapper .message-repeats {
-  background-color: var(--theme-highlight-red);
+  background-color: var(--repeat-bubble-background-color);
   font-weight: normal;
   font-size: 0.8em;
   height: auto;
@@ -933,7 +957,7 @@ a.learn-more-link.webconsole-learn-more-link {
 }
 
 .webconsole-output-wrapper .message.network .status {
-  color: var(--theme-comment);
+  color: var(--theme-highlight-blue);
   font-style: inherit;
 }
 
@@ -957,10 +981,6 @@ a.learn-more-link.webconsole-learn-more-link {
    supported in the Console panel. */
 .network.message #headers-panel .edit-and-resend-button {
   display: none;
-}
-
-.network.message #response-panel .treeTable {
-  overflow-y: hidden;
 }
 
 .network .message-flex-body > .message-body {
@@ -1016,23 +1036,31 @@ a.learn-more-link.webconsole-learn-more-link {
 .new-consoletable {
   width: 100%;
   border-collapse: collapse;
-  --consoletable-border: 1px solid var(--attachment-border-color);
+  --consoletable-border: var(--theme-splitter-color);
   margin-block-end: var(--attachment-margin-block-end);
+  color: var(--theme-body-color);
 }
 
-.new-consoletable thead,
+.new-consoletable thead {
+  border: 1px solid var(--consoletable-border);
+}
+
 .new-consoletable tbody {
   background-color: var(--theme-body-background);
+  border: 1px solid var(--consoletable-border);
+  border-block-start-width: 0;
 }
 
 .new-consoletable th {
-  background-color: var(--theme-selection-background);
-  color: var(--theme-selection-color);
+  background-color: var(--theme-toolbar-background);
+  color: var(--theme-body-color);
   margin: 0;
   padding: 5px 0 0;
   font-weight: inherit;
-  border-inline-end: var(--consoletable-border);
-  border-bottom: var(--consoletable-border);
+}
+
+.new-consoletable th:not(:last-of-type) {
+  border-inline-end: 1px solid var(--consoletable-border);
 }
 
 .new-consoletable tr:nth-of-type(even) {
@@ -1044,11 +1072,17 @@ a.learn-more-link.webconsole-learn-more-link {
   min-width: 100px;
   -moz-user-focus: normal;
   color: var(--theme-body-color);
-  border-inline-end: var(--consoletable-border);
   height: 1.25em;
   line-height: 1.25em;
+  /* Objects are expandable in cells, and if one gets tall,
+   * we still want other columns to stick to the top.
+   */
+  vertical-align: top;
 }
 
+.new-consoletable tr td:not(:last-of-type) {
+  border-inline-end: 1px solid var(--consoletable-border);
+}
 /* Layout */
 
 .webconsole-output {

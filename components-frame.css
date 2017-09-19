@@ -11,13 +11,7 @@
 .frame-link {
   display: flex;
   justify-content: space-between;
-  --frame-link-line-color: var(--grey-80);
-  --frame-link-function-color: var(--grey-90);
-}
-
-.theme-dark .frame-link {
-  --frame-link-line-color: white;
-  --frame-link-function-color: white;
+  --frame-link-line-color: var(--theme-highlight-blue);
 }
 
 .frame-link-async-cause {
@@ -26,7 +20,7 @@
 
 .frame-link .frame-link-source {
   flex: initial;
-  color: var(--theme-comment);
+  color: var(--theme-highlight-purple);
 }
 
 .frame-link a.frame-link-source {
@@ -47,7 +41,7 @@
 
 .frame-link .frame-link-function-display-name {
   margin-inline-end: 5px;
-  color: var(--frame-link-function-color);
+  color: var(--console-output-color, currentColor);
 }
 
 .frame-link .frame-link-line {
