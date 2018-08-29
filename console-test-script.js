@@ -45,7 +45,7 @@ let streamTimeoutId;
 function handleLog(key) {
   switch (key) {
     case "L" : console.log({a : Math.ceil(Math.random()*100), b: "b", c: [1,2,3]});break;
-    case "E" : console.error("Console.error", Math.random()*100);break;
+    case "E" : console.error("Console.error", Math.random()*100, document);break;
     case "w" : console.warn("Console.warn", Math.random()*100);break;
     case "i" : console.info("Console.info", Math.random()*100);break;
     case "d" : console.debug("Console.debug", Math.random()*100);break;
