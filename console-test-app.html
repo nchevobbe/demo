@@ -9,23 +9,23 @@
   <body>
     <canvas></canvas>
     <section class="buttons">
-      <button type="button" data-key="e">Exception</button>
       <button type="button" data-key="E">console.error</button>
       <button type="button" data-key="w">console.warn</button>
       <button type="button" data-key="L">console.log</button>
       <button type="button" data-key="i">console.info</button>
       <button type="button" data-key="d">console.debug</button>
-      <button type="button" data-key="x">XHR</button>
+      <button type="button" data-key="G">console.group</button>
+      <button type="button" data-key="C">console.groupCollapsed</button>
+      <button type="button" data-key="g">console.groupEnd</button>
+      <button type="button" data-key="T">console.time</button>
+      <button type="button" data-key="t">console.timeEnd</button>
+      <button type="button" data-key="r">console.trace</button>
+      <button type="button" data-key="c">console.count</button>
       <button type="button" data-key="s" aria-pressed="false">Stream logs</button>
       <button type="button" data-key="l">Log repeatable message</button>
-      <button type="button" data-key="G">Add group</button>
-      <button type="button" data-key="C">Add collapsed group</button>
-      <button type="button" data-key="g">Close group</button>
-      <button type="button" data-key="T">Add Timer</button>
-      <button type="button" data-key="t">Close Timer</button>
-      <button type="button" data-key="r">Trace</button>
-      <button type="button" data-key="c">Count</button>
+      <button type="button" data-key="e">Exception</button>
       <button type="button" data-key="X">Log Error</button>
+      <button type="button" data-key="x">XHR</button>
     </section>
 
     <!--<section class="test-cases">
@@ -35,8 +35,17 @@
       <button type="button" data-testcase="table">Tabular data</button>
       <button type="button" data-testcase="collapsed">Collapsed</button>
     </section>-->
+    <section class="react hidden">
+      <h2>React</h2>
+      <!-- <button type="button" data-key="E">console.error</button>
+      <button type="button" data-key="r">console.trace</button>
+      <button type="button" data-key="e">Exception</button>
+      <button type="button" data-key="X">Log Error</button> -->
+      <main id="react-container"></main>
+    </section>
     <script src="console-test-animation.js"></script>
     <script src="console-test-event-listeners.js"></script>
     <script src="console-test-script.js"></script>
+    <script src="framework/dist/bundle.js"></script>
   </body>
 </html>
