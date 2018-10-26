@@ -1,5 +1,4 @@
 body {
-  height: 100vh;
   margin: 0;
   padding: 0;
   background-image: linear-gradient(120deg, #155799, #159957);
@@ -23,7 +22,6 @@ body {
 }
 
 section {
-  height: 100vh;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -73,6 +71,11 @@ canvas {
   z-index: -1;
 }
 
-.hidden {
-  display: none;
+h2 {
+  background-color: var(--accent-color-secondary);
+  font-family: "Zilla Slab";
+  padding: 0.2em;
+  margin: 0.5em;
+  font-size: 3em;
+  display: inline-block;
 }
