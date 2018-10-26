@@ -1,9 +1,20 @@
-import React from "react";
+import dom from "react-dom-factories";
+
 const App = () => {
-  console.trace();
-  console.error("console.error");
-  console.log(new Error("Error rep"));
-  console.error(new Error("Error rep"));
-  return "Hello";
+  return [
+    dom.button({
+      onClick: () => console.trace("React trace")
+    }, "trace"),
+    dom.button({
+      onClick: () => {
+        throw "React exception";
+      }
+    }, "exception"),
+    dom.button({
+      onClick: () => {
+        console.log(new Error("React error object"));
+      }
+    }, "error object"),
+  ];
 };
 export default App;
