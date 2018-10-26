@@ -8,6 +8,11 @@ function setupCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   requestAnimationFrame(update);
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
 }
 setupCanvas()
 
@@ -15,11 +20,9 @@ function update() {
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   particles = particles.reduce((res, p, index) => {
     const {
-    acceleration,
       color,
       locat,
       size,
-      velocity,
     } = p;
     const {x, y} = locat;
 
