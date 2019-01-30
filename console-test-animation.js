@@ -17,8 +17,9 @@ function setupCanvas() {
 setupCanvas()
 
 function update() {
-  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-  particles = particles.reduce((res, p, index) => {
+  const {innerWidth, innerHeight} = window;
+  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  particles = particles.reduce((res, p) => {
     const {
       color,
       locat,
@@ -31,7 +32,7 @@ function update() {
     ctx.fillRect(x, y, size, size);
 
 
-    if (y> 0 && y < window.innerHeight + size && x > 0 &&  x < window.innerWidth + size) {
+    if (y> 0 && y < innerHeight + size && x > 0 &&  x < innerWidth + size) {
       res.push(updateParticle(p));
     }
 
@@ -48,13 +49,15 @@ function updateParticle(particle) {
     velocity,
   } = particle;
 
-  return Object.assign({}, particle, {
-    color: Object.assign({}, color, {
+  return {
+    ...particle,
+    color: {
+      ...color,
       h: color.h + velocity.y
-    }),
+    },
     locat: addVectors(locat, velocity),
     velocity: addVectors(velocity, acceleration),
-  });
+  };
 }
 
 function getNewParticle(x, y) {
@@ -91,8 +94,6 @@ function onButtonActivate(button) {
     left,
     top,
     right,
-    bottom,
-    x
   } = button.getBoundingClientRect();
 
   particles.push(...
