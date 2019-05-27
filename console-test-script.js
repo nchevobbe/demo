@@ -75,3 +75,15 @@ function streamLogs() {
   console.log("Streaming logs", new Date());
   streamTimeoutId = setTimeout(streamLogs, 0);
 }
+
+function tpw(silent = false) {
+  const x = document.createElement("img");
+  let i = parseInt(sessionStorage.getItem("tpw", 0))
+  if (isNaN(i)) {
+    i = 0;
+  }
+  x.src = "https://a.postrelease.com/?"+(++i);
+  sessionStorage.setItem("tpw", i);
+  document.body.appendChild(x);
+  if (!silent) console.log("tpw", x);
+}
