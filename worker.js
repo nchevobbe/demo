@@ -3,7 +3,7 @@ onmessage = function (e) {
   const { type } = e.data;
 
   if (type == "delay") {
-    console.info("delay, echoing ", e.data.message, "in", e.data.dealy, "ms");
+    console.info("delay, echoing ", e.data.message, "in", e.data.delay, "ms");
     setTimeout(() => {
       postMessage(`··${e.data.message}··`);
     }, e.data.delay);
