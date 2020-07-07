@@ -1,6 +1,7 @@
 const buttons = new Map();
 [...document.querySelectorAll("[data-key]")]
   .forEach(btn => buttons.set(btn.getAttribute("data-key"), btn));
+const workers = []
 
 document.addEventListener("click", e => {
   if (e.target.tagName === "BUTTON") {
@@ -10,6 +11,30 @@ document.addEventListener("click", e => {
     }
     if (button.getAttribute("data-testcase")) {
       handleTestCase(button.getAttribute("data-testcase"));
+    }
+
+    // workers
+    if (button.classList.contains("worker-spawn")) {
+      const url = "worker.js?id=" + (workers.length);
+      const worker = new Worker(url);
+      workers.push(worker);
+      worker.postMessage({type: "delay", delay: 1000, message: "worker created"});
+      worker.onmessage = function(e) {
+        console.log('Message received from worker', e);
+      }
+
+      const workersList = document.querySelector("section.workers ul");
+      const li = document.createElement("li");
+      const info = document.createElement("span");
+      info.textContent = url;
+      const terminateButton = document.createElement("button");
+      terminateButton.textContent = "Terminate";
+      terminateButton.addEventListener("click", () => {
+        worker.terminate();
+        li.remove();
+      });
+      li.append(info, terminateButton);
+      workersList.append(li);
     }
 
     const isToggler = button.hasAttribute("aria-pressed");
