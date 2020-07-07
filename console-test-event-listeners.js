@@ -27,19 +27,23 @@ document.addEventListener("click", (e) => {
       worker.onmessage = function (e) {
         console.log("Message received from worker", e);
       };
+      addWorkerElementToWorkerList(worker, url);
+    }
 
-      const workersList = document.querySelector("section.workers ul");
-      const li = document.createElement("li");
-      const info = document.createElement("span");
-      info.textContent = url;
-      const terminateButton = document.createElement("button");
-      terminateButton.textContent = "Terminate";
-      terminateButton.addEventListener("click", () => {
-        worker.terminate();
-        li.remove();
+    if (button.classList.contains("worker-spawn-remote")) {
+      const url =
+        "http://nicolaschevobbe.com/javascript/worker.js?id=" + workers.length;
+      const remoteWorker = new Worker(url);
+      workers.push(remoteWorker);
+      remoteWorker.postMessage({
+        type: "delay",
+        delay: 2000,
+        message: "remote worker created",
       });
-      li.append(info, terminateButton);
-      workersList.append(li);
+      remoteWorker.onmessage = function (e) {
+        console.log("Message received from remote worker", e);
+      };
+      addWorkerElementToWorkerList(remoteWorker, url);
     }
 
     const isToggler = button.hasAttribute("aria-pressed");
@@ -62,6 +66,21 @@ document.addEventListener("click", (e) => {
     }
   }
 });
+
+function addWorkerElementToWorkerList(worker, url) {
+  const workersList = document.querySelector("section.workers ul");
+  const li = document.createElement("li");
+  const info = document.createElement("span");
+  info.textContent = url;
+  const terminateButton = document.createElement("button");
+  terminateButton.textContent = "Terminate";
+  terminateButton.addEventListener("click", () => {
+    worker.terminate();
+    li.remove();
+  });
+  li.append(info, terminateButton);
+  workersList.append(li);
+}
 
 document.addEventListener("keydown", (e) => {
   if (buttons.has(e.key)) {
