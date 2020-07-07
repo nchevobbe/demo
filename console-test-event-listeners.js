@@ -30,22 +30,6 @@ document.addEventListener("click", (e) => {
       addWorkerElementToWorkerList(worker, url);
     }
 
-    if (button.classList.contains("worker-spawn-remote")) {
-      const url =
-        "https://nicolaschevobbe.com/javascript/worker.js?id=" + workers.length;
-      const remoteWorker = new Worker(url);
-      workers.push(remoteWorker);
-      remoteWorker.postMessage({
-        type: "delay",
-        delay: 2000,
-        message: "remote worker created",
-      });
-      remoteWorker.onmessage = function (e) {
-        console.log("Message received from remote worker", e);
-      };
-      addWorkerElementToWorkerList(remoteWorker, url);
-    }
-
     const isToggler = button.hasAttribute("aria-pressed");
     if (isToggler) {
       button.setAttribute(
