@@ -32,7 +32,7 @@ document.addEventListener("click", (e) => {
 
     if (button.classList.contains("worker-spawn-remote")) {
       const url =
-        "http://nicolaschevobbe.com/javascript/worker.js?id=" + workers.length;
+        "https://nicolaschevobbe.com/javascript/worker.js?id=" + workers.length;
       const remoteWorker = new Worker(url);
       workers.push(remoteWorker);
       remoteWorker.postMessage({
