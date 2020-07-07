@@ -21,14 +21,14 @@ body {
   vertical-align: middle;
 }
 
-section {
+section:not(.regular) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
 }
 
-button {
+button:not(.regular) {
   background-color: #000000;
   color: var(--accent-color-primary);
   font-family: "Zilla Slab";

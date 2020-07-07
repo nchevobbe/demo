@@ -74,6 +74,7 @@ function addWorkerElementToWorkerList(worker, url) {
   info.textContent = url;
   const terminateButton = document.createElement("button");
   terminateButton.textContent = "Terminate";
+  terminateButton.classList.add("regular");
   terminateButton.addEventListener("click", () => {
     worker.terminate();
     li.remove();
