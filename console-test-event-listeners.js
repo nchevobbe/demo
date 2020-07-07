@@ -1,9 +1,10 @@
 const buttons = new Map();
-[...document.querySelectorAll("[data-key]")]
-  .forEach(btn => buttons.set(btn.getAttribute("data-key"), btn));
-const workers = []
+[...document.querySelectorAll("[data-key]")].forEach((btn) =>
+  buttons.set(btn.getAttribute("data-key"), btn)
+);
+const workers = [];
 
-document.addEventListener("click", e => {
+document.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON") {
     const button = e.target;
     if (button.getAttribute("data-key")) {
@@ -15,13 +16,17 @@ document.addEventListener("click", e => {
 
     // workers
     if (button.classList.contains("worker-spawn")) {
-      const url = "worker.js?id=" + (workers.length);
+      const url = "worker.js?id=" + workers.length;
       const worker = new Worker(url);
       workers.push(worker);
-      worker.postMessage({type: "delay", delay: 1000, message: "worker created"});
-      worker.onmessage = function(e) {
-        console.log('Message received from worker', e);
-      }
+      worker.postMessage({
+        type: "delay",
+        delay: 1000,
+        message: "worker created",
+      });
+      worker.onmessage = function (e) {
+        console.log("Message received from worker", e);
+      };
 
       const workersList = document.querySelector("section.workers ul");
       const li = document.createElement("li");
@@ -39,15 +44,17 @@ document.addEventListener("click", e => {
 
     const isToggler = button.hasAttribute("aria-pressed");
     if (isToggler) {
-      button.setAttribute("aria-pressed", button.getAttribute("aria-pressed") !== "true");
+      button.setAttribute(
+        "aria-pressed",
+        button.getAttribute("aria-pressed") !== "true"
+      );
       const activate = () => {
         if (button.getAttribute("aria-pressed") === "true") {
           onButtonActivate(button);
           setTimeout(activate, 20);
         }
-      }
+      };
       activate();
-
     } else {
       onButtonActivate(button);
       button.classList.add("active");
@@ -56,7 +63,7 @@ document.addEventListener("click", e => {
   }
 });
 
-document.addEventListener("keydown", e => {
+document.addEventListener("keydown", (e) => {
   if (buttons.has(e.key)) {
     const button = buttons.get(e.key);
     button.click();
