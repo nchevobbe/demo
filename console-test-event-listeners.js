@@ -21,11 +21,11 @@ document.addEventListener("click", (e) => {
       workers.push(worker);
       worker.postMessage({
         type: "delay",
-        delay: 1000,
+        delay: 1,
         message: "worker created",
       });
       worker.onmessage = function (e) {
-        console.log("Message received from worker", e);
+        console.log("📃 Message received in main script, from worker", e);
       };
       addWorkerElementToWorkerList(worker, url);
     }

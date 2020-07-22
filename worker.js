@@ -3,10 +3,10 @@ onmessage = function (e) {
   const { type } = e.data;
 
   if (type == "delay") {
-    console.info("delay, echoing ", e, "…");
+    console.info("⚙️ delay, echoing ", e.data, "…");
     setTimeout(() => {
+      console.log("⚙️ …echo");
       postMessage(`··${e.data.message}··`);
-      console.log("…echo", new Date());
     }, e.data.delay);
   }
 };
