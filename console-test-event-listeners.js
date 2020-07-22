@@ -63,8 +63,19 @@ function addWorkerElementToWorkerList(worker, url) {
     worker.terminate();
     li.remove();
   });
-  li.append(info, terminateButton);
+  const logButton = document.createElement("button");
+  logButton.textContent = "Log";
+  logButton.classList.add("regular");
+  logButton.addEventListener("click", () => {
+    worker.postMessage({
+      type: "delay",
+      delay: 10,
+      message: "loggggg",
+    });
+  });
+  li.append(info, logButton, terminateButton);
   workersList.append(li);
+  li.scrollIntoView();
 }
 
 document.addEventListener("keydown", (e) => {
