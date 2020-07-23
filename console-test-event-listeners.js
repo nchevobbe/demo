@@ -60,7 +60,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
-const logCount = 0;
+let logCount = 0;
 function addWorkerElementToWorkerList(worker, url) {
   const workersList = document.querySelector("section.workers ul");
   const li = document.createElement("li");
