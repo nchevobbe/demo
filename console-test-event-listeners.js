@@ -16,7 +16,7 @@ document.addEventListener("click", (e) => {
 
     // workers
     if (button.classList.contains("worker-spawn")) {
-      const url = "worker.js?id=" + workers.length;
+      const url = "worker.js?id=" + (workers.length + 1);
       const worker = new Worker(url);
       workers.push(worker);
       worker.postMessage({
@@ -26,6 +26,15 @@ document.addEventListener("click", (e) => {
       });
       worker.onmessage = function (e) {
         console.log("📃 Message received in main script, from worker", e);
+      };
+      worker.onerror = function (e) {
+        console.error("📃 Error in worker, received in main script", e);
+      };
+      worker.onmessageerror = function (...args) {
+        console.error(
+          "📃 MessageError in worker, received in main script",
+          args
+        );
       };
       addWorkerElementToWorkerList(worker, url);
     }
@@ -51,6 +60,7 @@ document.addEventListener("click", (e) => {
   }
 });
 
+const logCount = 0;
 function addWorkerElementToWorkerList(worker, url) {
   const workersList = document.querySelector("section.workers ul");
   const li = document.createElement("li");
@@ -67,10 +77,11 @@ function addWorkerElementToWorkerList(worker, url) {
   logButton.textContent = "Log";
   logButton.classList.add("regular");
   logButton.addEventListener("click", () => {
+    console.log("📃 Posting message to worker");
     worker.postMessage({
       type: "delay",
       delay: 10,
-      message: "loggggg",
+      message: `log-${++logCount}`,
     });
   });
   li.append(info, logButton, terminateButton);
