@@ -158,6 +158,9 @@ function spawnWorker({ log = false } = {}) {
       delay: 1,
       message: "worker created",
     });
+    worker.postMessage({
+      type: "exception",
+    });
   }
 
   if (document.readyState !== "complete") {
@@ -196,7 +199,16 @@ function addWorkerElementToWorkerList(worker, url) {
       message: `log-${++logCount}`,
     });
   });
-  li.append(info, logButton, terminateButton);
+
+  const errorButton = document.createElement("button");
+  errorButton.textContent = "Exception";
+  errorButton.classList.add("regular");
+  errorButton.addEventListener("click", () => {
+    worker.postMessage({
+      type: "exception",
+    });
+  });
+  li.append(info, logButton, errorButton, terminateButton);
   workersList.append(li);
   li.scrollIntoView();
 }
