@@ -8,6 +8,11 @@
     />
     <link rel="stylesheet" href="console-test-app.css" />
     <link rel="icon" type="image/svg" sizes="any" href="favicon.svg" />
+
+    <script src="console-test-script.js"></script>
+    <script src="console-test-animation.js" defer></script>
+    <script src="console-test-event-listeners.js" defer></script>
+    <script src="framework/dist/bundle.js" defer></script>
   </head>
   <body>
     <canvas></canvas>
@@ -41,12 +46,9 @@
     <h2>Workers</h2>
     <section class="workers regular">
       <button type="button" class="worker-spawn">Spawn worker</button>
+      <button type="button" class="worker-spawn-log">Spawn worker + log</button>
+      <br />
       <ul></ul>
     </section>
-
-    <script src="console-test-animation.js"></script>
-    <script src="console-test-event-listeners.js"></script>
-    <script src="console-test-script.js"></script>
-    <script src="framework/dist/bundle.js"></script>
   </body>
 </html>

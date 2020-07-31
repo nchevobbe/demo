@@ -2,7 +2,6 @@ const buttons = new Map();
 [...document.querySelectorAll("[data-key]")].forEach((btn) =>
   buttons.set(btn.getAttribute("data-key"), btn)
 );
-const workers = [];
 
 document.addEventListener("click", (e) => {
   if (e.target.tagName === "BUTTON") {
@@ -16,27 +15,10 @@ document.addEventListener("click", (e) => {
 
     // workers
     if (button.classList.contains("worker-spawn")) {
-      const url = "worker.js?id=" + (workers.length + 1);
-      const worker = new Worker(url);
-      workers.push(worker);
-      worker.postMessage({
-        type: "delay",
-        delay: 1,
-        message: "worker created",
-      });
-      worker.onmessage = function (e) {
-        console.log("📃 Message received in main script, from worker", e);
-      };
-      worker.onerror = function (e) {
-        console.error("📃 Error in worker, received in main script", e);
-      };
-      worker.onmessageerror = function (...args) {
-        console.error(
-          "📃 MessageError in worker, received in main script",
-          args
-        );
-      };
-      addWorkerElementToWorkerList(worker, url);
+      spawnWorker();
+    }
+    if (button.classList.contains("worker-spawn-log")) {
+      spawnWorker({ log: true });
     }
 
     const isToggler = button.hasAttribute("aria-pressed");
@@ -59,35 +41,6 @@ document.addEventListener("click", (e) => {
     }
   }
 });
-
-let logCount = 0;
-function addWorkerElementToWorkerList(worker, url) {
-  const workersList = document.querySelector("section.workers ul");
-  const li = document.createElement("li");
-  const info = document.createElement("span");
-  info.textContent = url;
-  const terminateButton = document.createElement("button");
-  terminateButton.textContent = "Terminate";
-  terminateButton.classList.add("regular");
-  terminateButton.addEventListener("click", () => {
-    worker.terminate();
-    li.remove();
-  });
-  const logButton = document.createElement("button");
-  logButton.textContent = "Log";
-  logButton.classList.add("regular");
-  logButton.addEventListener("click", () => {
-    console.log("📃 Posting message to worker");
-    worker.postMessage({
-      type: "delay",
-      delay: 10,
-      message: `log-${++logCount}`,
-    });
-  });
-  li.append(info, logButton, terminateButton);
-  workersList.append(li);
-  li.scrollIntoView();
-}
 
 document.addEventListener("keydown", (e) => {
   if (buttons.has(e.key)) {

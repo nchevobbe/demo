@@ -2,8 +2,8 @@ body {
   margin: 0;
   padding: 0;
   background-image: linear-gradient(120deg, #155799, #159957);
-  --accent-color-primary: #FEED00;
-  --accent-color-secondary: #FD4593;
+  --accent-color-primary: #feed00;
+  --accent-color-secondary: #fd4593;
 }
 
 [data-key]::after {
@@ -78,4 +78,21 @@ h2 {
   margin: 0.5em;
   font-size: 3em;
   display: inline-block;
+}
+
+section.workers ul {
+  list-style: none;
+  display: inline-block;
+}
+
+section.workers li {
+  background-color: black;
+  color: var(--accent-color-secondary);
+  padding: 10px;
+  font-family: "Zilla Slab";
+  margin-bottom: 5px;
+}
+
+section.workers li span {
+  padding-inline-end: 1em;
 }
