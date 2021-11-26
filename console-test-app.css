@@ -33,6 +33,7 @@ button:not(.regular) {
   color: var(--accent-color-primary);
   font-family: "Zilla Slab";
   font-weight: 700;
+  word-break: break-all;
   padding: 0.2em;
   margin: 0.5em;
   border: none;
