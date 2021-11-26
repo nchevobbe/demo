@@ -109,6 +109,9 @@ function handleLog(key) {
         streamTimeoutId = null;
       }
       break;
+    case "b":
+      debugger;
+      break;
   }
 }
 
