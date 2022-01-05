@@ -42,12 +42,6 @@ button:not(.regular) {
   transition: transform 0.05s ease-in;
 }
 
-button:focus {
-  box-shadow: -0.2em -0.2em 0 var(--accent-color-secondary);
-  color: var(--accent-color-secondary);
-  transform: translate(0.05em, 0.05em);
-}
-
 button:active,
 button.active,
 button[aria-pressed="true"] {
@@ -58,7 +52,6 @@ button[aria-pressed="true"] {
 
 button:active[data-key]::after,
 button.active[data-key]::after,
-button:focus[data-key]::after,
 button[aria-pressed="true"][data-key]::after {
   background-color: var(--accent-color-secondary);
 }
