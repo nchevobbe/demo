@@ -7,7 +7,6 @@ function setupCanvas() {
   ctx = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  requestAnimationFrame(update);
 
   window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
@@ -38,7 +37,10 @@ function update() {
 
     return res;
   }, []);
-  requestAnimationFrame(update);
+  // Only spin the loop if we do have particles to render
+  if (particles.length) {
+    requestAnimationFrame(update);
+  }
 }
 
 function updateParticle(particle) {
@@ -101,4 +103,7 @@ function onButtonActivate(button) {
       .from({length: Math.ceil(getRandom(10, 20))})
       .map( _ => getNewParticle(getRandom(left, right), top))
   );
+
+  requestAnimationFrame(update);
+  
 }
